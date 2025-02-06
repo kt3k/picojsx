@@ -1,0 +1,15 @@
+{
+  "name": "@kt3k/picojsx",
+  "version": "0.1.0",
+  "exports": {
+    ".": "./index.ts",
+    "./jsx-runtime": "./jsx_runtime.ts"
+  },
+  "compilerOptions": {
+    "jsx": "react-jsx",
+    "jsxImportSource": "."
+  },
+  "imports": {
+    "@std/assert": "jsr:@std/assert@^1.0.11"
+  }
+}
