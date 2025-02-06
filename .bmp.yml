@@ -1,0 +1,7 @@
+version: 0.1.0
+commit: "chore: bump to v%.%.%"
+files:
+  README.md:
+    - "@kt3k/picojsx v%.%.%"
+    - "@kt3k/picojsx@%.%.%"
+  deno.json: '"version": "%.%.%"'
