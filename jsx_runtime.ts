@@ -40,7 +40,7 @@ export function jsx(
   ).join("");
   return voidElements.has(type)
     ? `<${type}${attrs} />`
-    : `<${type}${attrs}>${children}</${type}>`;
+    : `<${type}${attrs}>${children ?? ""}</${type}>`;
 }
 
 /** jsxs factory */

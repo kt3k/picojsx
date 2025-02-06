@@ -9,6 +9,7 @@ Deno.test("jsx factory", () => {
     <input type="radio" checked />,
     '<input type="radio" checked />',
   );
+  assertEquals(<span></span>, "<span></span>");
 
   function Foo() {
     return <span>foo</span>;
