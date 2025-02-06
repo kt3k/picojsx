@@ -2,8 +2,12 @@ name: ci
 on:
   push:
     branches: main
+    tag: '*'
   pull_request:
     branches: main
+permissions:
+  contents: read
+  id-token: write
 jobs:
   build:
     runs-on: ubuntu-latest
