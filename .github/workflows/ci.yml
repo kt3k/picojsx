@@ -2,7 +2,7 @@ name: ci
 on:
   push:
     branches: main
-    tags: "*"
+    tags: "[0-9]+.[0-9]+.[0-9]+"
   pull_request:
     branches: main
 permissions:
@@ -17,4 +17,5 @@ jobs:
       - run: deno fmt --check
       - run: deno lint
       - run: deno test
-      - run: deno -A jsr:@david/publish-on-tag@0.2.0
+      - run: deno publish
+        if: github.ref_type == 'tag'
