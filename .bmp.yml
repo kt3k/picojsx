@@ -1,5 +1,5 @@
 version: 0.1.6
-commit: "chore: bump to v%.%.%"
+commit: "chore: bump to %.%.%"
 files:
   README.md:
     - "@kt3k/picojsx v%.%.%"
