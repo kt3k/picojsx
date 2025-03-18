@@ -14,5 +14,8 @@
   },
   "fmt": {
     "semiColons": false
+  },
+  "tasks": {
+    "size": "deno -R jsr:@kt3k/gzip-size jsx_runtime.ts"
   }
 }
