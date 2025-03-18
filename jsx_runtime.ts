@@ -22,28 +22,28 @@ const voidElements = new Set([
   "source",
   "track",
   "wbr",
-]);
+])
 
-type Props = Record<string, unknown>;
+type Props = Record<string, unknown>
 
 function escape(str: unknown): string {
   return String(str).replace(/&/g, "&amp;")
     .replace(/"/g, "&quot;")
     .replace(/'/g, "&#39;")
     .replace(/</g, "&lt;")
-    .replace(/>/g, "&gt;");
+    .replace(/>/g, "&gt;")
 }
 
-const rendered = new Set();
-let clearTaskQueued = false;
+const rendered = new Set()
+let clearTaskQueued = false
 function markRendered(text: string) {
-  rendered.add(text);
+  rendered.add(text)
   if (!clearTaskQueued) {
-    clearTaskQueued = true;
+    clearTaskQueued = true
     queueMicrotask(() => {
-      rendered.clear();
-      clearTaskQueued = false;
-    });
+      rendered.clear()
+      clearTaskQueued = false
+    })
   }
 }
 
@@ -53,39 +53,39 @@ export function jsx(
   props: Props | { children: string | string[] },
 ): string {
   if (typeof type === "function") {
-    const text = type(props);
-    markRendered(text);
-    return text;
+    const text = type(props)
+    markRendered(text)
+    return text
   }
-  let { children, ...rest } = props;
+  let { children, ...rest } = props
   if (Array.isArray(children)) {
     children = children.map((child) =>
       rendered.has(child) ? child : escape(child)
-    ).join("");
+    ).join("")
   } else if (children && !rendered.has(children)) {
-    children = escape(children);
+    children = escape(children)
   }
   const attrs = Object.entries(rest).map(
     ([k, v]) =>
       typeof v === "boolean" ? (v ? " " + k : "") : ` ${k}="${escape(v)}"`,
-  ).join("");
+  ).join("")
   const text = voidElements.has(type)
     ? `<${type}${attrs} />`
-    : `<${type}${attrs}>${children ? children : ""}</${type}>`;
-  markRendered(text);
-  return text;
+    : `<${type}${attrs}>${children ? children : ""}</${type}>`
+  markRendered(text)
+  return text
 }
 
-export { jsx as jsxs };
+export { jsx as jsxs }
 
 /** Fragment factory */
 export function Fragment({ children }: { children: string }): string {
-  return Array.isArray(children) ? children.join("") : children;
+  return Array.isArray(children) ? children.join("") : children
 }
 
 export declare namespace JSX {
   interface IntrinsicElements {
     // deno-lint-ignore no-explicit-any
-    [elemName: string]: any;
+    [elemName: string]: any
   }
 }
