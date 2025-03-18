@@ -26,34 +26,61 @@ const voidElements = new Set([
 
 type Props = Record<string, unknown>;
 
+function escape(str: unknown): string {
+  return String(str).replace(/&/g, "&amp;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#39;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;");
+}
+
+const rendered = new Set();
+let clearTaskQueued = false;
+function markRendered(text: string) {
+  rendered.add(text);
+  if (!clearTaskQueued) {
+    clearTaskQueued = true;
+    queueMicrotask(() => {
+      rendered.clear();
+      clearTaskQueued = false;
+    });
+  }
+}
+
 /** jsx factory */
 export function jsx(
   type: string | ((props: Props) => string),
-  props: Props,
+  props: Props | { children: string | string[] },
 ): string {
   if (typeof type === "function") {
-    return type(props);
+    const text = type(props);
+    markRendered(text);
+    return text;
   }
-  const { children, ...rest } = props;
+  let { children, ...rest } = props;
+  if (Array.isArray(children)) {
+    children = children.map((child) =>
+      rendered.has(child) ? child : escape(child)
+    ).join("");
+  } else if (children && !rendered.has(children)) {
+    children = escape(children);
+  }
   const attrs = Object.entries(rest).map(
-    ([k, v]) => typeof v === "boolean" ? (v ? " " + k : "") : ` ${k}="${v}"`,
+    ([k, v]) =>
+      typeof v === "boolean" ? (v ? " " + k : "") : ` ${k}="${escape(v)}"`,
   ).join("");
-  return voidElements.has(type)
+  const text = voidElements.has(type)
     ? `<${type}${attrs} />`
-    : `<${type}${attrs}>${children ?? ""}</${type}>`;
+    : `<${type}${attrs}>${children ? children : ""}</${type}>`;
+  markRendered(text);
+  return text;
 }
 
-/** jsxs factory */
-export function jsxs(
-  type: string | ((props: Props) => string),
-  props: { children: string[] } & Props,
-): string {
-  return jsx(type, { ...props, children: props.children.join("") });
-}
+export { jsx as jsxs };
 
 /** Fragment factory */
 export function Fragment({ children }: { children: string }): string {
-  return children;
+  return Array.isArray(children) ? children.join("") : children;
 }
 
 export declare namespace JSX {

@@ -57,3 +57,25 @@ Deno.test("Fragment factory", () => {
     "<span>foo</span><span>bar</span>",
   );
 });
+
+Deno.test("props are escaped", () => {
+  assertEquals(
+    <div class={'"><script>alert(1)</script><div><div class="'} />,
+    '<div class="&quot;&gt;&lt;script&gt;alert(1)&lt;/script&gt;&lt;div&gt;&lt;div class=&quot;"></div>',
+  );
+});
+
+Deno.test("children are escaped", () => {
+  assertEquals(
+    <div>{"<script>alert(1)</script>"}</div>,
+    "<div>&lt;script&gt;alert(1)&lt;/script&gt;</div>",
+  );
+  assertEquals(
+    <div>
+      <div>
+        {"<script>alert(1)</script>"}
+      </div>
+    </div>,
+    "<div><div>&lt;script&gt;alert(1)&lt;/script&gt;</div></div>",
+  );
+});
