@@ -1,6 +1,6 @@
 {
   "name": "@kt3k/picojsx",
-  "version": "0.1.6",
+  "version": "0.1.7",
   "exports": {
     ".": "./index.ts",
     "./jsx-runtime": "./jsx_runtime.ts"
